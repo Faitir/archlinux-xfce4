@@ -1,0 +1,38 @@
+#Colors
+source ~/.bashrc_colors
+
+#Переменные
+LINE=$BGreen
+NAME=$BRed
+TEXT=$IWhite
+LOAD=$Red
+
+#Command Line
+#All distr
+#PS1="$LINE┌──$LINE|$NAME \u$BGreen@$BCyan\h$LINE |────|$IYellow \$PWD $LINE|────|$IPurple \A $LINE|$RstColor \n$LINE└─> $TEXT"
+#For android
+#PS1="$LINE┌──$LINE|$NAME Faitir$BGreen@$BCyan\h$LINE |────|$IYellow \$PWD $LINE|────|$IPurple \A $LINE|$RstColor \n$LINE└─> $TEXT"
+
+
+#Initial logo
+#/bin/neofetch
+#~/../usr/bin/clear
+#~/../usr/bin/neofetch
+
+#Сокращалки
+#Общие
+alias ls='ls --color=auto'
+alias cls='clear'
+alias py2='python2'
+alias py='python'
+#ПК
+#alias ssh-on='sudo systemctl start sshd'
+#alias ssh-off='sudo systemctl stop sshd'
+#For android
+#alias update='pkg upgrade'
+#alias ftp-on='sv up ftpd && enho "FTP работает на порте 8021"'
+#alias ftp-off='sv down ftpd'
+#alias ssh-on='sshd'
+#alias ssh-off='pkill sshd'
+
+#Scripts
