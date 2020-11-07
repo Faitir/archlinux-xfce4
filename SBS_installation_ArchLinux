@@ -1,0 +1,367 @@
+ШАГ 0. Настройка языка и шрифта терминала для установки:
+	
+		Изменение консольного шрифта:
+			
+			$ setfont cyr-sun16
+		
+		Генерация русской локали:
+			
+			Расскомментировать строку в файле:
+				
+				$ nano /etc/locale.gen
+					
+					#ru_RU.UTF-8 UTF-8
+			
+			$ locale-gen
+			
+			$ export LANG=ru_RU.UTF-8
+	
+ШАГ 1. Проверка и настройка сети:
+	
+	Проверка Ethernet подключения:
+		
+		$ ping -c 3 google.com
+		
+	Настройка Ethernet: -
+	
+	Настройка Wi-Fi: -
+
+ШАГ 2. Синхронизация времени:
+	
+	$ timedatectl set-ntp true -> Синхрон.
+	
+	$ timedatectl status -> Проверка синхрон.
+	
+ШАГ 3. Форматирование и монтирование:
+
+	Просмотр всех устройств:
+		
+		$ lsblk
+	
+	Установка таблицы разделов:
+		
+		$ parted /dev/sdX
+		
+		(parted) mklabel msdos/gpt
+		
+		(parted) quit
+		
+	Разметка устройства ( носителя ):
+		
+		$ cfdisk
+		
+			Разметка под msdos:
+				
+				swap_part < 512MiB
+				
+				root_part (/) всё остальное
+				
+			Разметка под gpt: -
+			
+	Форматирование:
+		
+		msdos:
+			
+			root:
+				
+				$ mkfs.ext4 /dev/root_part
+			
+			swap:
+				
+				$ mkswap /dev/swap_part
+				
+				$ swapon /dev/swap_part
+				
+		gpt: -
+
+	Монтирование:
+		
+		$ mount /dev/(root_part) /mnt
+
+ШАГ 4. Настройка зеркал: -
+
+ШАГ 5. Установка базовых компонентов и генерация Fstab:
+	
+	Установка базовых компонетов:
+		
+		$ pacstrap /mnt base base-devel linux linux-firmware nano dhcpcd grub intel-ucode git python
+		
+	Генерация Fstab:
+		
+		$ genfstab -U /mnt >> /mnt/etc/fstab
+	
+ШАГ 6. Настройка системы из под Chroot:
+	
+	Переход в Chroot:
+		
+		$ arch-chroot /mnt
+	
+	Обновление пакетов:
+		
+		$ pacman -Sy
+	
+	Установка локального времени:
+		
+		$ ln -sf /usr/share/zoneinfo/Asia/Yakutsk /etc/localtime
+		
+		$ hwclock --systohc
+	
+	Расскомментировать строку в файле:
+		
+		$ nano /etc/locale.gen
+			
+			ru_RU.UTF-8 UTF-8
+	
+	Обновление файла локализации:
+		
+		$ locale-gen
+	
+	Сделать запись в файле:
+		
+		$ nano /etc/locale.conf
+			
+			LANG=ru_RU.UTF-8
+	
+	Сделать запись в файле:
+		
+		$ nano /etc/vcosole.conf
+			
+			KEYMAP=ru
+			FONT=cyr-sun16
+	
+	Установка имени системы:
+		
+		$ nano /etc/hostname
+			
+			ArchLinux
+	
+	Сделать запись в файле:
+		
+		$ nano /etc/hosts
+			
+			127.0.0.1		localhost
+			::1			localhost
+			127.0.1.1		ArchLinux.localdomain.ArchLinux
+	
+	Задать пароль пользователю root:
+		
+		$ passwd
+	
+	Установка grub:
+		
+		$ grub-install /dev/sdX
+		
+	Генерация конфигурационного файла grub:
+		
+		$ grub-mkconfig -o /boot/grub/menu.cfg
+	
+	Сделать запись в файле:
+		
+		$ nano /boot/grub/grub.cfg
+			
+			.	/boot/grub/menu.cfg
+	
+	Сделать редактирование файла:
+		
+		$ nano /boot/grub/menu.cfg
+			
+			set gfxmode=1920x1080x32
+	
+	Разрешение использования х32 битных приложений в х64-ой системе:
+		
+		Расскомментировать строки в файле:
+			
+			$ nano /etc/pacman.conf
+				
+				[multilib]
+				Include=/etc/pacman.d/mirrorlist
+	
+	Обновление баз:
+		
+		$ pacman -Sy
+	
+	Установка драйверов для видеокарты, пакет польз. директорий, пакет привелегий, архив-менеджер, наборы шрифтов:
+		
+		$ pacman -S nvidia nvidia-utils lib32-nvidia-utils xdg-user-dirs sudo file-roller ttf-dejavu
+	
+	Выход из окружения Chroot:
+		
+		$ exit
+	
+	Размонтирование:
+		
+		$ umount -R /mnt
+	
+	Перезагрузка:
+		
+		$ reboot
+	
+ШАГ 7. Донастройка системы:
+(Зайти под root-пользователем)
+	
+	Создание нового пользователя:
+		
+		$ useradd -m -g users -G audio,games,lp,optical,power,scanner,storage,video,wheel -s /bin/bash new_user
+		
+		$ passwd new_user
+	
+	Добавление dhcpcd утилиты в автозапуск и её запуск:
+		
+		$ systemctl enable dhcpcd
+		
+		$ systemctl start dhcpcd
+	
+	Доступ к root'у для обычных пользователей:
+		
+		Расскомментировать строку в файле:
+			
+			$ nano /etc/sudoers
+			(Для группы wheel)
+				
+				% wheel ALL=(ALL) ALL
+	
+	Перезагрузка:
+		
+		$ reboot
+
+ШАГ 8. Установка вспомогательного инструмента и графического менеджера пакетов для Arch User Repository (AUR):
+(Для безопасноти вход выполнять за обычного пользователя)
+	
+	Клонирование репозитория yay:
+		
+		$ git clone https://aur.archlinux.org/yay.git
+	
+	Сборка и установка yay:
+		
+		$ cd yay
+		
+		$ makepkg -si
+		
+		$ makepkg -si --skipinteg
+		
+	Чистка остатков yay:
+		
+		$ cd
+		
+		$ rm -rf yay
+		
+	Установка графического менеджера пакетов:
+		
+		$ yay -S pamac-aur-git --noconfirm
+	
+	Перезагрузка:
+		
+		$ reboot
+
+ШАГ 9. Установка snap-менеджера:
+(Не обязательная установка)
+	
+	Клонирование репозитория snap-менеджера:
+		
+		$ git clone https://aur.archlinux.org/snapd.git
+	
+	Сборка и установка snap-менеджера:
+		
+		$ cd snapd/
+		
+		$ makepkg -si
+		
+		$ makepkg -si --skipinteg
+		
+	Установка пакета snap-менеджера и чистка остатков:
+		
+		$ ls (ПР. названия пакета: snapd-2.30-9-x86_64.pkg.tar.xz)
+		
+		$ sudo pacman -U *Пр: snapd-2.30-9-x86_64.pkg.tar.xz*
+		
+		$ cd
+		
+		$ rm -rf snapd
+	
+	Добавление в автозапуск:
+		
+		$ sudo systemctl enable snapd
+	
+	Перезагрузка:
+		
+		$ reboot
+		
+ШАГ 10. Установка Xorg, менеджера входа и графической оболочки:
+	
+	Установка Xorg-server'a:
+		
+		$ sudo pacman -S xorg-server xorg-drivers xorg-xinit
+	
+	Установка менеджера входа:
+		
+		SDDM:
+			
+			Установка sddm и компонентов:
+				
+				$ pacman -S sddm plasma-framework
+			
+			Активация сервиса SDDM:
+				
+				$ sudo systemctl enable sddm
+			
+			Загрузка кастомных тем и конфигурации:
+				
+				git clone https://github.com/sddm-themes.git
+			
+			Удаление стандартных конфигурации:
+				
+				$ rm -rf /etc/sddm.conf
+			
+			Установка кастомной конфигурации:
+				
+				$ mv sddm-themes/sddm.conf /etc/
+			
+			Установка кастомной темы:
+				
+				$ mv sddm-themes/Sweet /usr/share/sddm/themes/
+				
+		LXDM:
+			
+			Установка LXDM:
+				
+				$ sudo pacman -S lxdm
+			
+			Активация сервиса LXDM:
+				
+				$ sudo systemctl enable lxdm
+	
+	Установка графической оболочки:
+		
+		Установка XFCE4:  xfce4-conf.py
+		
+		Установка i3: -
+
+ШАГ 11. Кастомизация:
+	
+	Графические среды:
+		
+		xfce4: 
+			
+			$ git clone https://github.com/faitir/xfce4-themes.git
+		
+		i3: -
+	
+	Наборы иконок: 
+		
+		$ git clone https://github.com/faitir/icons.git
+	
+	Наборы курсоров: 
+		
+		$ git clone https://github.com/faitir/cursors.git
+	
+	Темы для Grub: 
+		
+		$ git clone https://github.com/faitir/grub-themes.git
+	
+	Оформление для Bash: 
+		
+		$ git clone https://github.com/faitir/bash-conf.git
+	
+	Wallpapers: 
+		
+		https://drive.google.com/drive/folders/1oBSjTcloqrM4sMqL-VfHp7Z434y610zK?usp=sharing
