@@ -78,7 +78,11 @@
 		
 		$ mount /dev/(root_part) /mnt
 
-ШАГ 4. Настройка зеркал: -
+ШАГ 4. Настройка зеркал:
+	
+	$ rm -rf /etc/pacman.d/mirrorlist
+	
+	$ mv archlinux-xfce4/mirrorlist /etc/pacman.d/
 
 ШАГ 5. Установка базовых компонентов и генерация Fstab:
 	
@@ -336,32 +340,6 @@
 		
 		Установка i3: -
 
-ШАГ 11. Кастомизация:
+Wallpapers:
 	
-	Графические среды:
-		
-		xfce4: 
-			
-			$ git clone https://github.com/faitir/xfce4-themes.git
-		
-		i3: -
-	
-	Наборы иконок: 
-		
-		$ git clone https://github.com/faitir/icons.git
-	
-	Наборы курсоров: 
-		
-		$ git clone https://github.com/faitir/cursors.git
-	
-	Темы для Grub: 
-		
-		$ git clone https://github.com/faitir/grub-themes.git
-	
-	Оформление для Bash: 
-		
-		$ git clone https://github.com/faitir/bash-conf.git
-	
-	Wallpapers: 
-		
-		https://drive.google.com/drive/folders/1oBSjTcloqrM4sMqL-VfHp7Z434y610zK?usp=sharing
+	https://drive.google.com/drive/folders/1oBSjTcloqrM4sMqL-VfHp7Z434y610zK?usp=sharing
