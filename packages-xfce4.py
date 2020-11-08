@@ -4,7 +4,8 @@ import os
 #
 #Разные пакеты:
 #   pacman:
-#       pycharm-community-edition, telegram-desktop, discord, filezilla, qbittorrent, guake, vim, [ tor torbrowser-launcher ], calibre, djview, krita, htop
+#       pycharm-community-edition, telegram-desktop, discord, filezilla, qbittorrent, guake, vim, [ tor torbrowser-launcher ], calibre, djview, krita, htop,
+#       grub-customizer
 #   yay:
 #       visual-studio-code-bin, hunspell-ru, gnome-terminal-transparency, zoom
 #   snap:
