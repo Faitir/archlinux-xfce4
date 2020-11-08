@@ -1,20 +1,20 @@
 ШАГ 0. Настройка языка и шрифта терминала для установки:
 	
-		Изменение консольного шрифта:
+	Изменение консольного шрифта:
 			
-			$ setfont cyr-sun16
+		$ setfont cyr-sun16
 		
-		Генерация русской локали:
+	Генерация русской локали:
 			
-			Расскомментировать строку в файле:
+		Расскомментировать строку в файле:
 				
-				$ nano /etc/locale.gen
+			$ nano /etc/locale.gen
 					
-					#ru_RU.UTF-8 UTF-8
+				#ru_RU.UTF-8 UTF-8
 			
-			$ locale-gen
+		$ locale-gen
 			
-			$ export LANG=ru_RU.UTF-8
+		$ export LANG=ru_RU.UTF-8
 	
 ШАГ 1. Проверка и настройка сети:
 	
@@ -128,7 +128,7 @@
 	
 	Сделать запись в файле:
 		
-		$ nano /etc/vcosole.conf
+		$ nano /etc/vconsole.conf
 			
 			KEYMAP=ru
 			FONT=cyr-sun16
@@ -308,9 +308,9 @@
 				
 				$ sudo systemctl enable sddm
 			
-			Загрузка кастомных тем и конфигурации:
+			Каталог кастомных тем и конфигурации:
 				
-				git clone https://github.com/sddm-themes.git
+				archlinux-xfce4/Themes-xfce4
 			
 			Удаление стандартных конфигурации:
 				
@@ -318,11 +318,11 @@
 			
 			Установка кастомной конфигурации:
 				
-				$ mv sddm-themes/sddm.conf /etc/
+				$ mv archlinux-xfce4/Themes-xfce4/sddm.conf /etc/
 			
 			Установка кастомной темы:
 				
-				$ mv sddm-themes/Sweet /usr/share/sddm/themes/
+				$ mv archlinux-xfce4/Themes-xfce4/Sweet /usr/share/sddm/themes/
 				
 		LXDM:
 			
@@ -336,7 +336,7 @@
 	
 	Установка графической оболочки:
 		
-		Установка XFCE4:  xfce4-conf.py
+		Установка XFCE4:  packages-xfce4.py
 		
 		Установка i3: -
 
